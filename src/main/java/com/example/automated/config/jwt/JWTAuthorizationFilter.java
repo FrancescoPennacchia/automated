@@ -31,9 +31,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        logger.info("User " + authentication.getName() + " is authenticated");
         chain.doFilter(req, res);
-        logger.info("User " + authentication.getName() + " is authorized");
     }
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(SecurityConstants.HEADER_STRING);
