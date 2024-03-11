@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     public JWTAuthorizationFilter(AuthenticationManager authenticationManager) {
@@ -29,9 +30,11 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         }
 
         UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        logger.info("User " + authentication.getName() + " is autehnticated");
         chain.doFilter(req, res);
+        logger.info("User " + authentication.getName() + " is authorized");
+
     }
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(SecurityConstants.HEADER_STRING);
@@ -45,12 +48,10 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
             if (user != null) {
                 logger.info("User " + user + " is not null");
-                return new UsernamePasswordAuthenticationToken(user, null);
+                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
             }
-
             return null;
         }
-
         return null;
     }
 }

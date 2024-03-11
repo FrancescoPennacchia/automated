@@ -21,20 +21,31 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import com.example.automated.config.jwt.SecurityConstants;
 
 import java.util.List;
 @Configuration
 @EnableMethodSecurity
 public class WebSecurity implements WebMvcConfigurer {
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Autowired
     private UserRepository userRepository;
 
-   /* @Bean
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(username -> userRepository.findByUsername(username)).passwordEncoder(passwordEncoder());
+        return authenticationManagerBuilder.build();
+    }
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        //configuration.setAllowedOrigins(List.of("http://localhost:8080"));
+        configuration.setAllowedOrigins(List.of("http://localhost:8080"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
         configuration.setExposedHeaders(List.of("custom-exposed-header"));
@@ -42,18 +53,8 @@ public class WebSecurity implements WebMvcConfigurer {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }*/
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(username -> userRepository.findByUsername(username)).passwordEncoder(passwordEncoder());
-        return authenticationManagerBuilder.build();
     }
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, CorsConfigurationSource corsConfigurationSource) throws Exception {
 
@@ -61,11 +62,13 @@ public class WebSecurity implements WebMvcConfigurer {
         http
                 .addFilterBefore(new CorsFilter(corsConfigurationSource), ChannelProcessingFilter.class)
                 .csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable)
+
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(http)))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager(http)))
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/api/auth/register")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/api/allUsers")).authenticated()
+                        .requestMatchers(new AntPathRequestMatcher("/api/allUsers")).fullyAuthenticated()
                         .anyRequest().authenticated()
                 )
 
@@ -74,4 +77,5 @@ public class WebSecurity implements WebMvcConfigurer {
 
         return http.build();
     }
+
 }
