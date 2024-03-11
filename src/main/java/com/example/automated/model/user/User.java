@@ -1,4 +1,4 @@
-package com.example.automated.model;
+package com.example.automated.model.user;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -12,6 +12,7 @@ import java.util.Collections;
 @Data
 @Entity
 @Table(name = "users")
+@DiscriminatorValue("users")
 public class User implements Serializable, UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +22,7 @@ public class User implements Serializable, UserDetails {
     private String username;
     @Column(name = "password")
     private String password;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
