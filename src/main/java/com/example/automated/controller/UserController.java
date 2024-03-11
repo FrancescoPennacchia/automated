@@ -1,6 +1,6 @@
 package com.example.automated.controller;
 
-import com.example.automated.model.User;
+import com.example.automated.model.user.User;
 import com.example.automated.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
