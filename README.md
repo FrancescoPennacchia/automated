@@ -17,6 +17,7 @@ Questo è il progetto principale per l'esame di Automated Software Delivery
 Il progetto è organizzato secondo la seguente struttura:
 
 
-#Realizzato da:
+# Realizzato da:
+
 Francesco Pennacchia
 
