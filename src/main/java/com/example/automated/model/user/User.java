@@ -14,6 +14,9 @@ import java.util.Collections;
 @Table(name = "users")
 @DiscriminatorValue("users")
 public class User implements Serializable, UserDetails {
+
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
