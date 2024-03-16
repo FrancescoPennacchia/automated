@@ -26,7 +26,7 @@ jobs:
 
       #Start service
       - name: Start services with Docker Compose (detached mode)
-        run: docker-compose up -ddocke
+        run: docker-compose up --force-recreate
 
       # Tests
       - name: Run unit tests (inside container)
