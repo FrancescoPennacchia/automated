@@ -20,6 +20,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Maven build
+        run: mvn build
+
       #Docker build
       - name: Build Docker images with Docker Compose
         run: docker-compose build
