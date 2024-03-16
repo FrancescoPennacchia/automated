@@ -26,7 +26,7 @@ jobs:
 
       #Start service
       - name: Start services with Docker Compose (detached mode)
-        run: docker-compose up -d
+        run: docker-compose up -ddocke
 
       # Tests
       - name: Run unit tests (inside container)
