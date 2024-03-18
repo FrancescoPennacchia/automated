@@ -1,0 +1,40 @@
+name: Docker and tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up JDK 17 
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Maven build
+        run: mvn build
+
+      #Docker build
+      - name: Build Docker images with Docker Compose
+        run: docker-compose build
+
+      #Start service
+      - name: Start services with Docker Compose (detached mode)
+        run: docker-compose up --force-recreate
+
+      # Tests
+      - name: Run unit tests (inside container)
+        run: docker-compose exec automated-spring-boot-app mvn jacoco:report mvn spotbugs:check mvn checkstyle:check
+
+      # Stop services after tests
+      - name: Stop services with Docker Compose
+        run: docker-compose down
