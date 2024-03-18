@@ -12,29 +12,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Set up JDK 17 
-      - uses: actions/setup-java@v4
+
+      - name: Set up JDK 17 with cache
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: maven
+          cache: true  # Or cache: false if needed
 
       - name: Maven build
         run: mvn build
 
-      #Docker build
       - name: Build Docker images with Docker Compose
         run: docker-compose build
 
-      #Start service
       - name: Start services with Docker Compose (detached mode)
-        run: docker-compose up --force-recreate
+        run: docker-compose up -d
 
-      # Tests
       - name: Run unit tests (inside container)
-        run: docker-compose exec automated-spring-boot-app mvn jacoco:report mvn spotbugs:check mvn checkstyle:check
+        run: docker-compose exec my-app-service mvn jacoco:report mvn spotbugs:check mvn checkstyle:check  # Replace with your service name
 
-      # Stop services after tests
       - name: Stop services with Docker Compose
         run: docker-compose down
