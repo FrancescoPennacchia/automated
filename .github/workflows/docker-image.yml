@@ -20,7 +20,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Maven build
-        run: mvn clean install
+        run: -B package --file pom.xml
 
       - name: Build Docker images with Docker Compose
         run: docker-compose build
