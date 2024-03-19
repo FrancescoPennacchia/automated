@@ -19,6 +19,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Inizialize Database
+        run: docker run --name postgresql -e POSTGRES_PASSWORD=root -e POSTGRES_USER=root -p 5432:5432  -d postgres
+
       - name: Maven build
         run: mvn -B package --file pom.xml
 
