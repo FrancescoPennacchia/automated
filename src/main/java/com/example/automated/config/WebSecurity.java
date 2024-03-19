@@ -21,9 +21,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import com.example.automated.config.jwt.SecurityConstants;
-
 import java.util.List;
+
 @Configuration
 @EnableMethodSecurity
 public class WebSecurity implements WebMvcConfigurer {
@@ -72,9 +71,7 @@ public class WebSecurity implements WebMvcConfigurer {
                         .anyRequest().authenticated()
                 )
 
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        ;
-
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
 
