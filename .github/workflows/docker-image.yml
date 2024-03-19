@@ -25,14 +25,20 @@ jobs:
       - name: Maven build
         run: mvn -B package --file pom.xml
 
+      - name: Test JaCoCo
+        run: mvn jacoco:report
+        
+      - name: Test Spotbugs
+        run: mvn spotbugs:check
+
+      - name: Test Checkstyle
+        run: mvn checkstyle:check
+
       - name: Build Docker images with Docker Compose
         run: docker-compose build
 
-      - name: Start services with Docker Compose (detached mode)
+      - name: Start services with Docker Compose
         run: docker-compose up -d
-
-      - name: Run unit tests (inside container)
-        run: docker-compose exec my-app-service mvn jacoco:report mvn spotbugs:check mvn checkstyle:check  # Replace with your service name
 
       - name: Stop services with Docker Compose
         run: docker-compose down
