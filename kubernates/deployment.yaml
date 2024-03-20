@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: automated-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: automated
+  template:
+    metadata:
+      labels:
+        app: automated
+    spec:
+      containers:
+        - name: automated-backend
+          image: frareturn/automated-backend:latest
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://database-service.default:5432/postgres
+            - name: SPRING_DATASOURCE_USERNAME
+              value: root
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: root
