@@ -30,7 +30,7 @@ public class Biography {
     private String surname;
 
     @Column(name = "birth_date")
-    @JsonFormat(pattern="dd-MM-yyyy")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate birthDate;
 
     @Column(name = "text")
