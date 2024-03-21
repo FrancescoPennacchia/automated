@@ -68,6 +68,7 @@ public class WebSecurity implements WebMvcConfigurer {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/api/auth/register")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/allUsers")).fullyAuthenticated()
+                        .requestMatchers(new AntPathRequestMatcher("/api/biographies/*")).fullyAuthenticated()
                         .anyRequest().authenticated()
                 )
 
