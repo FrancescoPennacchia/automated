@@ -12,9 +12,12 @@ import jakarta.persistence.CascadeType;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -36,7 +39,7 @@ public class User implements Serializable, UserDetails {
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Biography> biographies;
+    private transient Set<Biography> biographies;
 
 
     @Override
@@ -62,5 +65,27 @@ public class User implements Serializable, UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Set<Biography> getBiographies() {
+        return new HashSet<>(this.biographies);
+    }
+
+    public void setBiographies(Set<Biography> biographies) {
+        this.biographies = new HashSet<>(biographies);
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException, IOException {
+        in.defaultReadObject();
+        this.biographies = new HashSet<>();
+    }
+
+    public User() {
+
+    }
+
+    public User(User user) {
+        this.username = user.getUsername();
+        this.password = user.getPassword();
     }
 }
