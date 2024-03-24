@@ -56,24 +56,20 @@ public class WebSecurity implements WebMvcConfigurer {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, CorsConfigurationSource corsConfigurationSource) throws Exception {
-
-
         http
                 .addFilterBefore(new CorsFilter(corsConfigurationSource), ChannelProcessingFilter.class)
                 .csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable)
 
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(http)))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager(http)))
-
+                .addFilterBefore(new JWTAuthorizationFilter(authenticationManager(http)), JWTAuthorizationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/api/auth/register")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/biographies/addBiography")).fullyAuthenticated()
                         .requestMatchers(new AntPathRequestMatcher("/api/allUsers")).fullyAuthenticated()
-                        .requestMatchers(new AntPathRequestMatcher("/api/biographies/*")).fullyAuthenticated()
                         .anyRequest().authenticated()
                 )
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
-
 }

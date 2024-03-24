@@ -25,14 +25,14 @@ public class BiographyController {
     private BiographyRepository biographyRepository;
 
     // Endpoint per ottenere tutte le biografie
-    @GetMapping("/{allBiography}")
+    @GetMapping("/allBiography")
     public ResponseEntity<List<Biography>> getAllBiographies() {
         List<Biography> biographies = biographyRepository.findAll();
         return new ResponseEntity<>(biographies, HttpStatus.OK);
     }
 
     // Endpoint per ottenere una singola biografia per ID
-    @GetMapping("getBiography/{id}")
+    @GetMapping("/getBiography/{id}")
     public ResponseEntity<Biography> getBiographyById(@PathVariable Long id) {
         Optional<Biography> biography = biographyRepository.findById(id);
         return biography.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
@@ -47,7 +47,7 @@ public class BiographyController {
     }
 
     // Endpoint per aggiornare una biografia esistente
-    @PutMapping("updateBiography/{id}")
+    @PutMapping("/updateBiography/{id}")
     public ResponseEntity<Biography> updateBiography(@PathVariable Long id, @RequestBody Biography biography) {
         Optional<Biography> existingBiographyOptional = biographyRepository.findById(id);
         if (existingBiographyOptional.isEmpty()) {
@@ -59,7 +59,7 @@ public class BiographyController {
     }
 
     // Endpoint per eliminare una biografia
-    @DeleteMapping("deleteBiography/{id}")
+    @DeleteMapping("/deleteBiography/{id}")
     public ResponseEntity<Void> deleteBiography(@PathVariable Long id) {
         Optional<Biography> biographyOptional = biographyRepository.findById(id);
         if (biographyOptional.isEmpty()) {
