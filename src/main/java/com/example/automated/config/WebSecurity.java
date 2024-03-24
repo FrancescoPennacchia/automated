@@ -64,7 +64,7 @@ public class WebSecurity implements WebMvcConfigurer {
                 .addFilterBefore(new JWTAuthorizationFilter(authenticationManager(http)), JWTAuthorizationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/api/auth/register")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/api/biographies/addBiography")).fullyAuthenticated()
+                        .requestMatchers(new AntPathRequestMatcher("/api/biographies/*")).fullyAuthenticated()
                         .requestMatchers(new AntPathRequestMatcher("/api/allUsers")).fullyAuthenticated()
                         .anyRequest().authenticated()
                 )
