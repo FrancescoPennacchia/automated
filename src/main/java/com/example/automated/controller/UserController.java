@@ -23,11 +23,20 @@ public class UserController {
 
     @PostMapping("/api/auth/register")
     public ResponseEntity<User> authenticateUser(@RequestBody User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        try {
+            System.out.println("User: " + user);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            System.out.println("Encoded password: " + user.getPassword());
 
-        userRepository.save(user);
+            userRepository.save(user);
+            System.out.println("User saved: " + user);
 
-        return ResponseEntity.ok(user);
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            System.out.println("Exception caught: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @GetMapping("/api/allUsers")

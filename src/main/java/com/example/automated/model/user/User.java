@@ -39,7 +39,7 @@ public class User implements Serializable, UserDetails {
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private transient Set<Biography> biographies;
+    private transient Set<Biography> biographies =  new HashSet<>();
 
 
     @Override
@@ -81,11 +81,12 @@ public class User implements Serializable, UserDetails {
     }
 
     public User() {
-
+        this.biographies = new HashSet<>();
     }
 
     public User(User user) {
         this.username = user.getUsername();
         this.password = user.getPassword();
+        this.biographies = new HashSet<>(user.getBiographies());
     }
 }

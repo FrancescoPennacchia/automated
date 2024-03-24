@@ -10,12 +10,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
-
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
 @Entity
@@ -36,6 +35,7 @@ public class Biography implements Serializable {
 
     @Column(name = "birth_date")
     @JsonFormat(pattern = "dd-MM-yyyy")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate birthDate;
 
     @Column(name = "text")
@@ -46,12 +46,10 @@ public class Biography implements Serializable {
     private User user;
 
     public User getUser() {
-        // Return a copy of the user object
-        return new User(this.user);
+        return this.user != null ? new User(this.user) : null;
     }
     public void setUser(User user) {
-        // Clone the provided User object
-        this.user = new User(user);
+        this.user = user != null ? new User(user) : null;
     }
 
     @Override
