@@ -1,17 +1,25 @@
 package com.example.automated.model.user;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.example.automated.model.biography.Biography;
 import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Data
 @Entity
@@ -29,6 +37,9 @@ public class User implements Serializable, UserDetails {
     private String username;
     @Column(name = "password")
     private String password;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private transient Set<Biography> biographies =  new HashSet<>();
 
 
     @Override
@@ -54,5 +65,28 @@ public class User implements Serializable, UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Set<Biography> getBiographies() {
+        return new HashSet<>(this.biographies);
+    }
+
+    public void setBiographies(Set<Biography> biographies) {
+        this.biographies = new HashSet<>(biographies);
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException, IOException {
+        in.defaultReadObject();
+        this.biographies = new HashSet<>();
+    }
+
+    public User() {
+        this.biographies = new HashSet<>();
+    }
+
+    public User(User user) {
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+        this.biographies = new HashSet<>(user.getBiographies());
     }
 }

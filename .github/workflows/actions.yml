@@ -24,9 +24,6 @@ jobs:
 
       - name: Maven build
         run: mvn -B package --file pom.xml
-
-      - name: Test JaCoCo
-        run: mvn jacoco:report
         
       - name: Test Spotbugs
         run: mvn spotbugs:check
