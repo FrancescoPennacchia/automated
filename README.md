@@ -14,7 +14,6 @@ back-end Spring Boot, con JWT e Spring Security.
 
 Tecnologie utilizzate:
 - Maven
-- Jococo
 - Checkstyle
 - Spotbugs
 - docker - docker-compose
