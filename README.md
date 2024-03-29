@@ -14,7 +14,6 @@ back-end Spring Boot, con JWT e Spring Security.
 
 Tecnologie utilizzate:
 - Maven
-- Jococo
 - Checkstyle
 - Spotbugs
 - docker - docker-compose
@@ -30,7 +29,12 @@ Per utilizzare docker:
 - mvn package -DskipTests                        #Bisogna avere maven installato
 - docker-compose up                              #Bisogna avere docker e docker-compose
 
-Per Kubernetes:
+Per Kubernetes (Disponibile solo sul branch kubernetes):
+- Realizzato tramite l'utilizzo di minikube. Necessita l'installazione di minikube e kubernetes.
+- minikube start
+- kubectl apply --filename ./kubernetes/database-kubernetes.yaml
+- kubectl apply --filename ./kubernetes/automated-kubernetes.yaml
+- minikube service --all
 
 # Realizzato da:
 
