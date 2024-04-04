@@ -9,11 +9,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -34,11 +34,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         User creds = new ObjectMapper()
                 .readValue(req.getInputStream(), User.class);
 
-        return authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        creds.getUsername(),
-                        creds.getPassword()
-        ));
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(creds.getUsername(), creds.getPassword());
+        try {
+            return authenticationManager.authenticate(authToken);
+        } catch (BadCredentialsException e) {
+            res.getWriter().write("Invalid username or password");
+            res.getWriter().flush();
+            return null;
+        }
     }
 
     @Override

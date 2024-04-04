@@ -1,10 +1,9 @@
 package com.example.automated.controller;
 
 import com.example.automated.model.user.User;
-import com.example.automated.repository.UserRepository;
+import com.example.automated.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,36 +13,19 @@ import java.util.List;
 
 @RestController
 public class UserController {
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private UserService userService;
 
 
     @PostMapping("/api/auth/register")
     public ResponseEntity<User> authenticateUser(@RequestBody User user) {
-        try {
-            System.out.println("User: " + user);
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            System.out.println("Encoded password: " + user.getPassword());
-
-            userRepository.save(user);
-            System.out.println("User saved: " + user);
-
-            return ResponseEntity.ok(user);
-        } catch (Exception e) {
-            System.out.println("Exception caught: " + e.getMessage());
-            e.printStackTrace();
-            throw e;
-        }
+        return userService.createUser(user);
     }
 
     @GetMapping("/api/allUsers")
-    public ResponseEntity<Iterable<User>> getAllUsers() {
-        List<User> users = userRepository.findAll();
-
-        return ResponseEntity.ok(users);
+    public ResponseEntity<List<User>> getAllUsers() {
+        return userService.getAllUsers();
     }
 
 
