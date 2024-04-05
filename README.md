@@ -27,6 +27,7 @@ Comandi senza l'utilizzo di docker:
 
 Per utilizzare docker:
 - mvn package -DskipTests                        #Bisogna avere maven installato
+- docker build .
 - docker-compose up                              #Bisogna avere docker e docker-compose
 
 Per Kubernetes (Disponibile solo sul branch kubernetes):
